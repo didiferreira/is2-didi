@@ -1,0 +1,71 @@
+Proceso: programa en ejecucion, tiene su codigo, pila contador de programa datos.
+
+Clasificacion: Livianos y Pesados
+
+Procesos Pesados o procesos Unix: los procesos no comparten ninguna porcion de la memoria. cada proceso se ejecuta en su propio procesador virtual con cpu y memoria. 
+Si comparten el mismo espacio de almacenamiento permanente(el disco)
+
+Procesos Livianos o threads: comparten toda la memoria y el espacio de almacenamiento permanente.
+
+Se dice que es pesado porque el costo de implementacion en tiempo de cpu y memoria es mucho mas elevado que el de liviano.
+
+Procesos pesados requieren MMU -: Se encarga de la traduccion de direcciones virtuales a reales.
+
+Ventaja de procesos pesados: garatiza proteccion. Si un proceso falla, los demas siguen sin problemas.
+
+Ventaja procesos livianos: pueden comunicarse eficiientemente atravez de la mmoria que comparten.
+
+Nano System:
+Es un sistema de tareas que que comparten el mismo espacio de direcciones virtuales en un proceso Unix.
+Las tareas de naSystem se implementan multiplexando el tiempo de Cpu del proceso Unix  en tajadas de tiempo que se otorga por turnos a cada tarea.
+
+Gestion de Tareas de Nsystem
+nTask nEmitTask(int(*proc)(),parametro1,...parametro6).
+  Emite una nueva tarea que ejecuta el procedimiento proc.
+  Acepta maximo 6 parametros
+  Retorna una descripcion de la tarea lanzada.
+
+void nExitTask(nTask task):
+  Termina la ejecucion de la tarea que lo invoca.
+  rc es el codigo de retorno de la tarea.
+
+int nWaitTask(nTask task):
+  Espera a que una tarea termine.
+  Entrega el codigo de retorno dado en nExitTask.
+
+void nExitSystem(int rc):
+  Termina la ejecucion de todas las tareas.
+  Termina el proceso Unix con codigo de retorno rc.
+
+Semaforos:
+Los mensajes de nsystem son un mecanismo para sincronizar procesos.
+Otro metodo es el de los semaforos; un semaforo es un distribuidor
+de tickets  y sirve para acotar el numero de tareas que pasan por una
+determinada instruccion
+Operaciones que aceptan un semaforo son:
+  Wait(S): pide un ticket al semaforo. si el semaforo no tiene tickets disponibles, el proceso se bloquea hasta que otro proceso aporte tickets a ese mismo semaforo.
+  Signal(S): Aporta un ticket al semaforo. si habia algun proceso esperando un ticket, se desbloquea. 
+
+Problema del productor/consumidor
+Proceso productor produce items depositandolos en un buffer. 
+Los items son extraidos del buffer por un proceso consumidor.
+Productor y consumidor trabajan concurrentemente
+NextEmpty indica el indice en el que arreglo en donde hay que depositar
+el proximo item producido
+NextFull indica el indice en el arreglo de donde hay que extraer el proximo
+item por consumir.
+Problema:
+cuando el consumidor trata de extraer  un item cuando el buffer esta vacio, el consumidor se bloquee hasta que el productor deposite un item.
+Cuando el productor intenta depositar un item cuando el buffer ya esta lleno, el productor se debe bloquear hasta que el consumidor extraiga un item.
+Posible solucion:
+Usando dos semaforos; Un semaforo mantendra el numero de posiciones disponibles para depositar items.
+Segundo semaforo sirve para mantener el numero de items disponibles.
+
+Sistema de mensajes:
+hacer que procesos que no comparten memoria puedan comunicarse, pero tambien pueden usarse para sincronizar procesos que comparten la memoria
+
+Interprete de comandos:
+Se encarga de leer las ordenes interactivas del usuario y ejecutar los programas que el usuario indique, no forma parte del nucleo
+
+
+
